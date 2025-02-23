@@ -7,7 +7,9 @@ Docker Compose (included with Docker Desktop)
 # For Ubuntu :
 
 Update package list and install dependencies
+
 sudo apt update
+
 sudo apt install -y ca-certificates curl gnupg
 
 # Add Docker’s official GPG key

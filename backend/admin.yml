@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin
+spec:
+  selector:
+    matchLabels:
+      app: admin
+  template:
+    metadata:
+      labels:
+        app: admin
+    spec:
+      containers:
+      - name: admin
+        image: princekansagra/food_frnezy:admin
+        env:
+          - name: MONGO_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: mongo-config
+                key: MONGO_HOST
+          - name: MONGO_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: mongo-config
+                key: MONGO_PORT
+          - name: MONGO_DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: mongo-config
+                key: MONGO_DB_NAME
+          
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-admin
+spec:
+  selector:
+    app: admin
+  type: NodePort
+  ports:
+  - port: 3000
+    targetPort: 3000
+    nodePort: 30010

@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    restart: always
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build: /home/ravi/data/b/Project Practice/food_frenzy/backend/Dockerfile.backend
+    container_name: backend
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+    environment:
+      NODE_ENV: "DEVELOPMENT"
+      PORT: 8000
+      MONGODB_URL: "mongodb://127.0.0.1:27017/food_frenzy"
+      JWT_SECRET_KEY: "secretkeyjwt"
+      JWT_EXPIRES: "86400"
+      JWT_ACTIVE_KEY: "secretactivekeyjwt"
+      BASE_URL: "http://localhost:3000/"
+      SMTP_HOST: "smtp.gmail.com"
+      SMTP_PORT: 587
+      SMTP_USERNAME: "ravikansagra1@gmail.com"
+      SMTP_PASSWORD: "jgyfdkwajsmrnzyj"
+      EMAIL_FROM: "ravikansagra1@gmail.com"
+
+  admin:
+    build: /home/ravi/data/b/Project Practice/food_frenzy/Admin/Dockerfile
+    container_name: admin
+    restart: always
+    ports: 
+      - 3001:3000
+    depends_on:
+      - backend
+
+  frontend:
+    build: /home/ravi/data/b/Project Practice/food_frenzy/frontend/Dockerfile.frontend
+    container_name: frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
+

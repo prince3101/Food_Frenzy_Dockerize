@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: bakcend
+        image: princekansagra/food_frnezy:backend
+        env:
+          - name: MONGO_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: mongo-config
+                key: MONGO_HOST
+          - name: MONGO_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: mongo-config
+                key: MONGO_PORT
+          - name: MONGO_DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: mongo-config
+                key: MONGO_DB_NAME
+              
+        
+          
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-backend
+spec:
+  selector:
+    app: backend
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+    nodePort: 30020
+  
